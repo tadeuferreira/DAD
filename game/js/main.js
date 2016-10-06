@@ -28,6 +28,8 @@ function load_css () {
 
     if($(this).val() != null && !$(this).hasClass('initial')){
       $(this).addClass('with-value');
+    }else if ($(this).val() === null) {
+      $(this).removeClass('with-value')
     }
   });
 };
