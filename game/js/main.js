@@ -13,6 +13,10 @@ var main = function(){
   console.log('avavsas')
 });
 
+ $('#btn-new').click(function(event) {
+  onClickNewGame();
+ });
+
 
  // var btnCheck = getElementById('#btn-check');
 //var btnNew = getElementById('#btn-new');
@@ -49,6 +53,7 @@ function highlightCells (val) {
 function onClickNewGame(){
   var dificulty = $('#select-mode').find(":selected").val();
   load_grill(dificulty);
+
 }
 
 function cleanBoard(){
@@ -57,6 +62,7 @@ function cleanBoard(){
 
 function load_grill (dificulty) {
 cleanBoard();
+  $('#loading').toggleClass('invisible');
 
  $.ajax({url: "http://198.211.118.123:8080/board/" + dificulty}).then(function(data) {
    var values = data;
@@ -66,6 +72,7 @@ cleanBoard();
      $(input).prop('disabled', true);
    };
     load_css();
+    $('#loading').toggleClass('invisible');
  });
 };
 
