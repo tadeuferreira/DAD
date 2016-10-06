@@ -57,6 +57,7 @@ function onClickNewGame(){
 }
 
 function cleanBoard(){
+  $('.dad-cell input').prop('disabled', false);
   $('.dad-cell input').val('');
 }
 
