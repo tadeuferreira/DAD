@@ -17,23 +17,33 @@ var main = function(){
   onClickNewGame();
  });
 
+ //setup initial game
+ onClickNewGame();
 
- // var btnCheck = getElementById('#btn-check');
-//var btnNew = getElementById('#btn-new');
- // var selectMode = getElementById('#select-mode');
-
- 
- load_grill('easy');
+  $('.dad-cell input').change(function(event) {
+    //reload the css for inputed values
+    reload_css();
+  });
 
 };
 
-
-function load_css () {
+function load_initial_css () {
   $('.dad-cell input').each(function (index, value) { 
     if($(this).val() != ''){
       $(this).addClass('initial');
-    }else if ($(this).val() == '') {
+    }else if ($(this).val() === '') {
       $(this).removeClass('initial')
+    }
+  });
+};
+
+function reload_css () {
+  $('.dad-cell input').each(function (index, value) { 
+    
+    if($(this).val() != '' && !$(this).hasClass('initial')){
+      $(this).addClass('with-value');
+    }else if ($(this).val() === '') {
+      $(this).removeClass('with-value')
     }
   });
 };
@@ -72,7 +82,7 @@ cleanBoard();
      $(input).val(values[i].value);
      $(input).prop('disabled', true);
    };
-    load_css();
+    load_initial_css();
     $('#loading').toggleClass('invisible');
  });
 };
