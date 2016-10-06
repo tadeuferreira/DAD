@@ -18,18 +18,18 @@ var main = function(){
 //var btnNew = getElementById('#btn-new');
  // var selectMode = getElementById('#select-mode');
 
- load_css();
- load_grill();
+ 
+ load_grill('easy');
+
 };
 
 
 function load_css () {
   $('.dad-cell input').each(function (index, value) { 
-
-    if($(this).val() != null && !$(this).hasClass('initial')){
-      $(this).addClass('with-value');
-    }else if ($(this).val() === null) {
-      $(this).removeClass('with-value')
+    if($(this).val() != ''){
+      $(this).addClass('initial');
+    }else if ($(this).val() == '') {
+      $(this).removeClass('initial')
     }
   });
 };
@@ -46,25 +46,27 @@ function highlightCells (val) {
   });
 };
 
-function load_grill () {
+function onClickNewGame(){
+  var dificulty = $('#select-mode').find(":selected").val();
+  load_grill(dificulty);
+}
 
- $.ajax({url: "http://198.211.118.123:8080/board/easy"}).then(function(data) {
-   myvar = data;
-   console.log(myvar)
-       //for(var i = 0; i<$('.dad-row').length; i++){
-        $( ".dad-row" ).each(function() {
-          var row = this;
-          for (var j = 0; j< row.children.length; j++) {
-            
-            //var cell = row.children[j];
-            //var input = cell.children[0];       
-            $('.dad-cell input').val(1);
-          //row.children.each(function() {
-          //});
+function cleanBoard(){
+  $('.dad-cell input').val('');
+}
 
-        }
-      });
-      });
+function load_grill (dificulty) {
+cleanBoard();
+
+ $.ajax({url: "http://198.211.118.123:8080/board/" + dificulty}).then(function(data) {
+   var values = data;
+   for (var i = values.length - 1; i >= 0; i--) {
+     var input=$('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
+     $(input).val(values[i].value);
+     $(input).prop('disabled', true);
+   };
+    load_css();
+ });
 };
 
 $(document).ready(main);
