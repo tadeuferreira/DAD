@@ -16,56 +16,28 @@ var main = function(){
   onClickNewGame();
  });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
  $('#btn-check').click(function(event) {
    onClickCheckGame();
  });
 
- //setup initial game
- onClickNewGame();
-=======
->>>>>>> parent of 0b21eea... inputed values style
-=======
->>>>>>> parent of 0b21eea... inputed values style
-
- // var btnCheck = getElementById('#btn-check');
-//var btnNew = getElementById('#btn-new');
- // var selectMode = getElementById('#select-mode');
-
- 
  load_grill('easy');
-<<<<<<< HEAD
-
   $('.dad-cell input').dblclick(function(event) {
     $(this).toggleClass('individual-highlight');
   });
-=======
->>>>>>> parent of 0b21eea... inputed values style
-
 };
 
 
 function load_css () {
   $('.dad-cell input').each(function (index, value) { 
-<<<<<<< HEAD
     var cellInput = $(this);
     if(cellInput.val() != ''){
       cellInput.addClass('initial');
     }else if (cellInput.val() === '') {
       cellInput.removeClass('initial')
-=======
-    if($(this).val() != ''){
-      $(this).addClass('initial');
-    }else if ($(this).val() == '') {
-      $(this).removeClass('initial')
->>>>>>> parent of 0b21eea... inputed values style
-    }
   });
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 function reload_css () {
   $('.dad-cell input').each(function (index, value) { 
     var cellInput = $(this);
@@ -77,10 +49,6 @@ function reload_css () {
   });
 };
 
-=======
->>>>>>> parent of 0b21eea... inputed values style
-=======
->>>>>>> parent of 0b21eea... inputed values style
 function highlightCells (val) {
   $('.dad-cell input').each(function (index, value) { 
     //Remove all previously highlitghted nummbers
@@ -110,19 +78,13 @@ function checkConflict(cellInput) {
 }
 
 function cleanBoard(){
-<<<<<<< HEAD
-  $('.dad-cell input').prop('disabled', false);
-  $('.dad-cell input').val('');
-  $('.dad-cell input').attr('class','');
-};
-=======
   var cellInput = $('.dad-cell input');
   cellInput.prop('disabled', false);
   cellInput.val('');
   cellInput.removeClass('individual-highlight');
   cellInput.removeClass('highlight');
 }
->>>>>>> origin/master
+
 
 function load_grill (dificulty) {
 cleanBoard();
