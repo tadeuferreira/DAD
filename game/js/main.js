@@ -7,7 +7,7 @@
 var main = function(){
 
 
- $('#highlightButtons').children().click(function(event) {
+ $('#highlightButtons').find('button').click(function(event) {
   var value = $(this).val();
   highlightCells(value);
   console.log('avavsas')
@@ -69,7 +69,8 @@ function onClickNewGame(){
 function cleanBoard(){
   $('.dad-cell input').prop('disabled', false);
   $('.dad-cell input').val('');
-}
+  $('.dad-cell input').attr('class','');
+};
 
 function load_grill (dificulty) {
 cleanBoard();
