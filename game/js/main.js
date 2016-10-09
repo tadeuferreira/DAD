@@ -17,12 +17,15 @@ var main = function(){
  });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
  $('#btn-check').click(function(event) {
    onClickCheckGame();
  });
 
  //setup initial game
  onClickNewGame();
+=======
+>>>>>>> parent of 0b21eea... inputed values style
 =======
 >>>>>>> parent of 0b21eea... inputed values style
 
@@ -32,10 +35,13 @@ var main = function(){
 
  
  load_grill('easy');
+<<<<<<< HEAD
 
   $('.dad-cell input').dblclick(function(event) {
     $(this).toggleClass('individual-highlight');
   });
+=======
+>>>>>>> parent of 0b21eea... inputed values style
 
 };
 
@@ -59,6 +65,7 @@ function load_css () {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 function reload_css () {
   $('.dad-cell input').each(function (index, value) { 
     var cellInput = $(this);
@@ -70,6 +77,8 @@ function reload_css () {
   });
 };
 
+=======
+>>>>>>> parent of 0b21eea... inputed values style
 =======
 >>>>>>> parent of 0b21eea... inputed values style
 function highlightCells (val) {
