@@ -64,38 +64,22 @@ function highlightCells (val) {
     
     if(cellInput.val() === val ){
       cellInput.toggleClass('highlight');
-        
-      
     }
-
   });
 };
-
-
-function conflictCell(val) {
-  $('.dad-cell input').parent().each(function(index) {
-    var cellInput = $(this);
-    cellInput.removeClass('conflict')
-
-    if(cellInput.val() === val){
-      cellInput.toggleClass('conflict');
-    }
-  });
-}
 
 function onClickNewGame(){
   var dificulty = $('#select-mode').find(":selected").val();
   load_grill(dificulty);
-
 }
 
 function onClickCheckGame() {
-  
-
+  var cellInput = $('.dad-cell input');
+  checkConflict(cellInput);
 }
 
-function checkConflict() {
-  
+function checkConflict(cellInput) {
+   
 }
 
 function cleanBoard(){
@@ -103,6 +87,7 @@ function cleanBoard(){
   cellInput.prop('disabled', false);
   cellInput.val('');
   cellInput.removeClass('individual-highlight');
+  cellInput.removeClass('highlight');
 }
 
 function load_grill (dificulty) {
