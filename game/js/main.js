@@ -17,12 +17,20 @@ var main = function(){
   onClickNewGame();
  });
 
+ $('#btn-check').click(function(event) {
+   onClickCheckGame();
+ });
+
  //setup initial game
  onClickNewGame();
 
   $('.dad-cell input').change(function(event) {
     //reload the css for inputed values
     reload_css();
+  });
+
+  $('.dad-cell input').dblclick(function(event) {
+    $(this).toggleClass('individual-highlight');
   });
 
 };
@@ -60,15 +68,42 @@ function highlightCells (val) {
   });
 };
 
+function conflictCell(val) {
+  $('.dad-cell input').parent().each(function(index) {
+    $(this).removeClass('conflict')
+
+    if($(this).val() === val){
+      $(this).toggleClass('conflict');
+    }
+  });
+}
+
 function onClickNewGame(){
   var dificulty = $('#select-mode').find(":selected").val();
   load_grill(dificulty);
 
 }
 
+function onClickCheckGame() {
+  
+
+}
+
+function checkConflict() {
+  $.ajax({url: "http://198.211.118.123:8080/board/"}).then(function(data) {
+   var values = data;
+   for (var i = values.length - 1; i >= 0; i--) {
+     var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
+     input.val(values[i].value);
+     input.prop('disabled', true);
+   };
+}
+
 function cleanBoard(){
-  $('.dad-cell input').prop('disabled', false);
-  $('.dad-cell input').val('');
+  var cellInput = $('.dad-cell input');
+  cellInput.prop('disabled', false);
+  cellInput.val('');
+  cellInput.removeClass('individual-highlight');
 }
 
 function load_grill (dificulty) {
@@ -78,9 +113,9 @@ cleanBoard();
  $.ajax({url: "http://198.211.118.123:8080/board/" + dificulty}).then(function(data) {
    var values = data;
    for (var i = values.length - 1; i >= 0; i--) {
-     var input=$('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
-     $(input).val(values[i].value);
-     $(input).prop('disabled', true);
+     var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
+     input.val(values[i].value);
+     input.prop('disabled', true);
    };
     load_initial_css();
     $('#loading').toggleClass('invisible');
