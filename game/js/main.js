@@ -16,17 +16,22 @@ var main = function(){
   onClickNewGame();
  });
 
+<<<<<<< HEAD
  $('#btn-check').click(function(event) {
    onClickCheckGame();
  });
 
  //setup initial game
  onClickNewGame();
+=======
+>>>>>>> parent of 0b21eea... inputed values style
 
-  $('.dad-cell input').change(function(event) {
-    //reload the css for inputed values
-    reload_css();
-  });
+ // var btnCheck = getElementById('#btn-check');
+//var btnNew = getElementById('#btn-new');
+ // var selectMode = getElementById('#select-mode');
+
+ 
+ load_grill('easy');
 
   $('.dad-cell input').dblclick(function(event) {
     $(this).toggleClass('individual-highlight');
@@ -34,17 +39,26 @@ var main = function(){
 
 };
 
-function load_initial_css () {
+
+function load_css () {
   $('.dad-cell input').each(function (index, value) { 
+<<<<<<< HEAD
     var cellInput = $(this);
     if(cellInput.val() != ''){
       cellInput.addClass('initial');
     }else if (cellInput.val() === '') {
       cellInput.removeClass('initial')
+=======
+    if($(this).val() != ''){
+      $(this).addClass('initial');
+    }else if ($(this).val() == '') {
+      $(this).removeClass('initial')
+>>>>>>> parent of 0b21eea... inputed values style
     }
   });
 };
 
+<<<<<<< HEAD
 function reload_css () {
   $('.dad-cell input').each(function (index, value) { 
     var cellInput = $(this);
@@ -56,6 +70,8 @@ function reload_css () {
   });
 };
 
+=======
+>>>>>>> parent of 0b21eea... inputed values style
 function highlightCells (val) {
   $('.dad-cell input').each(function (index, value) { 
     //Remove all previously highlitghted nummbers
@@ -110,7 +126,7 @@ cleanBoard();
      input.val(values[i].value);
      input.prop('disabled', true);
    };
-    load_initial_css();
+    load_css();
     $('#loading').toggleClass('invisible');
  });
 };
