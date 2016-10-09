@@ -63,7 +63,9 @@ function highlightCells (val) {
     cellInput.removeClass('highlight');
     
     if(cellInput.val() === val ){
-      cellInput.toggleClass('highlight');
+      cellInput.toggleClass('highlight').delay(5000).queue('fx', function() { 
+        cellInput.removeClass('highlight').dequeue(); 
+      });
     }
   });
 };
