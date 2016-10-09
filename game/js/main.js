@@ -87,6 +87,7 @@ function cleanBoard(){
   cellInput.val('');
   cellInput.removeClass('individual-highlight');
   cellInput.removeClass('highlight');
+  cellInput.removeClass('with-value');
 };
 
 
