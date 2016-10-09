@@ -25,8 +25,11 @@ var main = function(){
   $('.dad-cell input').dblclick(function(event) {
     $(this).toggleClass('individual-highlight');
     });
-  };
 
+   $('.dad-cell input').change(function(event) {
+   reload_css();
+    });
+  };
 
 function load_css () {
   $('.dad-cell input').each(function (index, value) { 
@@ -38,7 +41,6 @@ function load_css () {
     }
   });
 };
-
 
 function reload_css () {
   $('.dad-cell input').each(function (index, value) { 
