@@ -7,24 +7,25 @@
 var main = function(){
   'use strict';
 
- $('#highlightButtons').find('button').click(function(event) {
-  var value = $(this).val();
-  highlightCells(value);
-});
+  $('#highlightButtons').find('button').click(function(event) {
+    var value = $(this).val();
+    highlightCells(value);
+  });
 
- $('#btn-new').click(function(event) {
+  $('#btn-new').click(function(event) {
   onClickNewGame();
- });
+  });
 
- $('#btn-check').click(function(event) {
+  $('#btn-check').click(function(event) {
    onClickCheckGame();
- });
+  });
 
- load_grill('easy');
+  load_grill('easy');
+
   $('.dad-cell input').dblclick(function(event) {
     $(this).toggleClass('individual-highlight');
-  });
-};
+    });
+  };
 
 
 function load_css () {
@@ -33,7 +34,8 @@ function load_css () {
     if(cellInput.val() != ''){
       cellInput.addClass('initial');
     }else if (cellInput.val() === '') {
-      cellInput.removeClass('initial')
+      cellInput.removeClass('initial');
+    }
   });
 };
 
@@ -44,7 +46,7 @@ function reload_css () {
     if(cellInput.val() != '' && !cellInput.hasClass('initial')){
       cellInput.addClass('with-value');
     }else if (cellInput.val() === '') {
-      cellInput.removeClass('with-value')
+      cellInput.removeClass('with-value');
     }
   });
 };
@@ -66,16 +68,16 @@ function highlightCells (val) {
 function onClickNewGame(){
   var dificulty = $('#select-mode').find(":selected").val();
   load_grill(dificulty);
-}
+};
 
 function onClickCheckGame() {
   var cellInput = $('.dad-cell input');
   checkConflict(cellInput);
-}
+};
 
 function checkConflict(cellInput) {
    
-}
+};
 
 function cleanBoard(){
   var cellInput = $('.dad-cell input');
@@ -83,7 +85,7 @@ function cleanBoard(){
   cellInput.val('');
   cellInput.removeClass('individual-highlight');
   cellInput.removeClass('highlight');
-}
+};
 
 
 function load_grill (dificulty) {
