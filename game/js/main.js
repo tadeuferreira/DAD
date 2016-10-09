@@ -5,12 +5,11 @@
 // Implementation:
 
 var main = function(){
-
+  'use strict';
 
  $('#highlightButtons').children().click(function(event) {
   var value = $(this).val();
   highlightCells(value);
-  console.log('avavsas')
 });
 
  $('#btn-new').click(function(event) {
@@ -37,21 +36,22 @@ var main = function(){
 
 function load_initial_css () {
   $('.dad-cell input').each(function (index, value) { 
-    if($(this).val() != ''){
-      $(this).addClass('initial');
-    }else if ($(this).val() === '') {
-      $(this).removeClass('initial')
+    var cellInput = $(this);
+    if(cellInput.val() != ''){
+      cellInput.addClass('initial');
+    }else if (cellInput.val() === '') {
+      cellInput.removeClass('initial')
     }
   });
 };
 
 function reload_css () {
   $('.dad-cell input').each(function (index, value) { 
-    
-    if($(this).val() != '' && !$(this).hasClass('initial')){
-      $(this).addClass('with-value');
-    }else if ($(this).val() === '') {
-      $(this).removeClass('with-value')
+    var cellInput = $(this);
+    if(cellInput.val() != '' && !cellInput.hasClass('initial')){
+      cellInput.addClass('with-value');
+    }else if (cellInput.val() === '') {
+      cellInput.removeClass('with-value')
     }
   });
 };
@@ -59,21 +59,26 @@ function reload_css () {
 function highlightCells (val) {
   $('.dad-cell input').each(function (index, value) { 
     //Remove all previously highlitghted nummbers
-    $(this).removeClass('highlight');
+    var cellInput = $(this);
+    cellInput.removeClass('highlight');
     
-    if($(this).val() === val ){
-      $(this).toggleClass('highlight');
+    if(cellInput.val() === val ){
+      cellInput.toggleClass('highlight');
+        
+      
     }
 
   });
 };
 
+
 function conflictCell(val) {
   $('.dad-cell input').parent().each(function(index) {
-    $(this).removeClass('conflict')
+    var cellInput = $(this);
+    cellInput.removeClass('conflict')
 
-    if($(this).val() === val){
-      $(this).toggleClass('conflict');
+    if(cellInput.val() === val){
+      cellInput.toggleClass('conflict');
     }
   });
 }
@@ -90,13 +95,7 @@ function onClickCheckGame() {
 }
 
 function checkConflict() {
-  $.ajax({url: "http://198.211.118.123:8080/board/"}).then(function(data) {
-   var values = data;
-   for (var i = values.length - 1; i >= 0; i--) {
-     var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
-     input.val(values[i].value);
-     input.prop('disabled', true);
-   };
+  
 }
 
 function cleanBoard(){
