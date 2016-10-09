@@ -13,21 +13,21 @@ var main = function(){
   });
 
   $('#btn-new').click(function(event) {
-  onClickNewGame();
+    onClickNewGame();
   });
 
   $('#btn-check').click(function(event) {
-   onClickCheckGame();
+    onClickCheckGame();
   });
 
   load_grill('easy');
 
   $('.dad-cell input').dblclick(function(event) {
     $(this).toggleClass('individual-highlight');
-    });
+  });
 
-   $('.dad-cell input').change(function(event) {
-   reload_css();
+  $('.dad-cell input').change(function(event) {
+    reload_css();
     });
   };
 
