@@ -111,10 +111,10 @@ function checkConflict() {
       for (var i = values.length - 1; i >= 0; i--) {
       var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
       conflictCell(input);
+    }
     }else{
       endGame();
     }
-   };
  }).fail(function (errMsg) {
    alert(errMsg);
  }).always(function () {
