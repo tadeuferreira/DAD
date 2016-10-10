@@ -26,14 +26,14 @@ var main = function(){
   });
 
   $('.dad-cell input').change(function(event) {
-    check_val($(this));
-    reload_css($(this));
+    checkVal($(this));
+    reloadCss($(this));
   });
 
-  load_grill('easy');
+  loadGrill('easy');
 };
 
-function load_css () {
+function loadInitialCss () {
   $('.dad-cell input').each(function (index, value) { 
     var cellInput = $(this);
     cellInput.attr('min','1');
@@ -46,7 +46,7 @@ function load_css () {
   });
 };
 
-function reload_css (cellInput) {
+function reloadCss (cellInput) {
   if(cellInput.val() != '' && !cellInput.hasClass('initial')){
     cellInput.addClass('with-value');
   }else if (cellInput.val() === '') {
@@ -54,7 +54,7 @@ function reload_css (cellInput) {
   }
 };
 
-function check_val (cellInput) {
+function checkVal (cellInput) {
   if(Number(cellInput.val()) < Number(cellInput.attr('min')) || Number(cellInput.val()) > Number(cellInput.attr('max'))){
     cellInput.val('');
   }
@@ -89,7 +89,7 @@ function conflictCell(cellInput) {
 
 function onClickNewGame(){
   var dificulty = $('#select-mode').find(":selected").val();
-  load_grill(dificulty);
+  loadGrill(dificulty);
 };
 
 function onClickCheckGame() {
@@ -107,22 +107,25 @@ function checkConflict() {
     contentType: "application/json;",
   }).done(function(data){
     console.log(data);
-
-
-
-    var values = data.conflicts;
-    for (var i = values.length - 1; i >= 0; i--) {
-     var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
-     conflictCell(input);
+    if(data.finished === false){
+      var values = data.conflicts;
+      for (var i = values.length - 1; i >= 0; i--) {
+      var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
+      conflictCell(input);
+    }else{
+      endGame();
+    }
    };
  }).fail(function (errMsg) {
    alert(errMsg);
  }).always(function () {
-
+  //
 });
-
 };
 
+function endGame () {
+  // body... 
+}
 function cleanBoard(){
   var cellInput = $('.dad-cell input');
   cellInput.prop('disabled', false);
@@ -147,7 +150,7 @@ function getBoard(){
   return jsonObj;
 };
 
-function load_grill (dificulty) {
+function loadGrill (dificulty) {
   cleanBoard();
   $('#loading').toggleClass('invisible');
   $.getJSON("http://198.211.118.123:8080/board/" + dificulty).done(function(data) {
@@ -157,7 +160,7 @@ function load_grill (dificulty) {
      input.val(values[i].value);
      input.prop('disabled', true);
    };
-   load_css(); 
+   loadInitialCss(); 
  }).fail(function(){
   alert("error");
 }).always(function(){
