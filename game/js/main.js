@@ -29,7 +29,49 @@ var main = function(){
     reloadCss($(this));
   });
 
+  $(".dad-row").click(function(event){
+      var x = $(this).children();
+      var delay = 50;
+      for (var i = 0; i < x.length; i++) {
+         
+        $(x[i]).animate
+        ({ backgroundColor: "#FFBF00" }, 500 + delay);
+
+        var input = $(x[i]).children();
+
+        if(!input.hasClass('initial')){
+          input.animate
+          ({ backgroundColor: "#FFBF00" }, 500 + delay);
+        }
+        
+
+        setTimeout(function(cell) {
+          $(cell).animate
+          ({ backgroundColor: "white" }, 500 + delay);
+
+
+          if(!$(cell).children().hasClass('initial')){
+            $(cell).children().animate
+            ({ backgroundColor: "white" }, 500 + delay);
+          }
+
+        }, 400, x[i]);
+
+        delay += 100;
+    };
+
+  });
+
   loadGrill('easy');
+  //animateCell();
+};
+
+function animateCell(){
+
+var values = $('.dad-row');
+      for (var i = values.length - 1; i >= 0; i--) {
+        var input = $('.dad-board').find('[data-line="' + values[i].line);
+      } 
 };
 
 function loadInitialCss () {
@@ -124,7 +166,8 @@ function checkConflict() {
 
 function endGame () {
   // body... 
-}
+};
+
 function cleanBoard(){
   var cellInput = $('.dad-cell input');
   cellInput.prop('disabled', false);
@@ -166,6 +209,7 @@ function loadGrill (dificulty) {
   $('#loading').toggleClass('invisible');
 });
 };
+
 
 
 $(document).ready(main);
