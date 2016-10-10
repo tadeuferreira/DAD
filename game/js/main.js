@@ -17,7 +17,7 @@ var main = function(){
   });
 
   $('#btn-check').click(function(event) {
-    onClickCheckGame();
+    checkConflict();
   });
 
   load_grill('easy');
@@ -67,18 +67,52 @@ function highlightCells (val) {
   });
 };
 
+function conflictCells (val) {
+  $('.dad-cell input').each(function (index, value) { 
+    //Remove all previously highlitghted nummbers
+    var cellInput = $(this);
+    cellInput.removeClass('conflict');
+    
+    if (cellInput.val() === val) {
+      cellInput.toggleClass('conflict').delay(5000).queue('fx', function() { 
+        cellInput.removeClass('conflict').dequeue(); 
+      });
+    }
+  });
+};
+
 function onClickNewGame(){
   var dificulty = $('#select-mode').find(":selected").val();
   load_grill(dificulty);
 };
 
 function onClickCheckGame() {
-  var cellInput = $('.dad-cell input');
+  var cellInput = $('.dad-cell input').val();
   checkConflict(cellInput);
 };
 
 function checkConflict(cellInput) {
-   
+
+  $.ajax({
+    url: 'http://198.211.118.123:8080/board/check',
+    type: 'POST',
+  })
+  .done(function(cellInput) {
+    console.log("success");
+    var values = cellInput;
+    console.log(cellInput);
+    for (var i = values.length - 1; i >= 0; i--) {
+      var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
+      conflictCells(input.val(values[i].value));
+    };
+
+  })
+  .fail(function() {
+    console.log("error");
+  })
+  .always(function() {
+    console.log("complete");
+  });
 };
 
 function cleanBoard(){
