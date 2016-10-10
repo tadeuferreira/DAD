@@ -17,6 +17,7 @@ var main = function(){
   });
 
   $('#btn-check').click(function(event) {
+    event.preventDefault();
     onClickCheckGame();
   });
 
@@ -46,16 +47,16 @@ function load_css () {
 };
 
 function reload_css (cellInput) {
-    if(cellInput.val() != '' && !cellInput.hasClass('initial')){
-      cellInput.addClass('with-value');
-    }else if (cellInput.val() === '') {
-      cellInput.attr('class','');
-    }
+  if(cellInput.val() != '' && !cellInput.hasClass('initial')){
+    cellInput.addClass('with-value');
+  }else if (cellInput.val() === '') {
+    cellInput.attr('class','');
+  }
 };
 
 function check_val (cellInput) {
   if(Number(cellInput.val()) < Number(cellInput.attr('min')) || Number(cellInput.val()) > Number(cellInput.attr('max'))){
-      cellInput.val('');
+    cellInput.val('');
   }
 };
 
@@ -98,24 +99,28 @@ function onClickCheckGame() {
 function checkConflict() {
   var jsonObj = getBoard();
   var strJSON = JSON.stringify(jsonObj);
-  $.ajax({
+  $.post({
     url: 'http://198.211.118.123:8080/board/check',
     type: 'POST',
     data: strJSON,
-    contentType: "application/json; charset=utf-8",
     dataType: "json",
-    success: function(data){
-      console.log(data);
-      var values = data;
-      for (var i = values.length - 1; i >= 0; i--) {
-       var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
-       conflictCell(input);
-     }; 
-   },
-   failure: function(errMsg) {
-    alert(errMsg);
-  }
+    contentType: "application/json;",
+  }).done(function(data){
+    console.log(data);
+
+
+
+    var values = data.conflicts;
+    for (var i = values.length - 1; i >= 0; i--) {
+     var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
+     conflictCell(input);
+   };
+ }).fail(function (errMsg) {
+   alert(errMsg);
+ }).always(function () {
+
 });
+
 };
 
 function cleanBoard(){
@@ -131,9 +136,9 @@ function getBoard(){
     var element = $(this);
     if(element.val() != ''){
       item = {};
-      item ["line"] = element.attr("data-line");
-      item ["column"] = element.attr("data-column");
-      item ["value"] = element.val();
+      item ["line"] = Number(element.attr("data-line"));
+      item ["column"] = Number(element.attr("data-column"));
+      item ["value"] = Number(element.val());
       item ["fixed"] = element.prop('disabled');
       jsonObj.push(item);
     }    
@@ -145,7 +150,7 @@ function getBoard(){
 function load_grill (dificulty) {
   cleanBoard();
   $('#loading').toggleClass('invisible');
-  $.ajax({url: "http://198.211.118.123:8080/board/" + dificulty}).done(function(data) {
+  $.getJSON("http://198.211.118.123:8080/board/" + dificulty).done(function(data) {
    var values = data;
    for (var i = values.length - 1; i >= 0; i--) {
      var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
