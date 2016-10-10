@@ -67,18 +67,11 @@ function highlightCells (val) {
   });
 };
 
-function conflictCells (val) {
-  $('.dad-cell input').each(function (index, value) { 
-    //Remove all previously highlitghted nummbers
-    var cellInput = $(this);
+function conflictCell(cellInput) {
     cellInput.removeClass('conflict');
-    
-    if (cellInput.val() === val) {
-      cellInput.toggleClass('conflict').delay(5000).queue('fx', function() { 
+    cellInput.toggleClass('conflict').delay(5000).queue('fx', function() { 
         cellInput.removeClass('conflict').dequeue(); 
       });
-    }
-  });
 };
 
 function onClickNewGame(){
@@ -87,31 +80,38 @@ function onClickNewGame(){
 };
 
 function onClickCheckGame() {
-  var cellInput = $('.dad-cell input').val();
-  checkConflict(cellInput);
+  checkConflict();
 };
 
-function checkConflict(cellInput) {
-
+function checkConflict() {
+var jsonObj = [];
+$('.dad-cell input').each( function (index, value){
+  var element = $(this);
+    item = {};
+    item ["line"] = element.attr("data-line");
+    item ["column"] = element.attr("data-column");
+    item ["value"] = element.val();
+    item ["fixed"] = element.prop('disabled');
+    jsonObj.push(item);
+});
+var strJSON = JSON.stringify(jsonObj);
+console.log(strJSON);
   $.ajax({
     url: 'http://198.211.118.123:8080/board/check',
     type: 'POST',
-  })
-  .done(function(cellInput) {
-    console.log("success");
-    var values = cellInput;
-    console.log(cellInput);
-    for (var i = values.length - 1; i >= 0; i--) {
-      var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
-      conflictCells(input.val(values[i].value));
-    };
-
-  })
-  .fail(function() {
-    console.log("error");
-  })
-  .always(function() {
-    console.log("complete");
+    data: strJSON,
+    contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(data){
+         var values = data;
+         for (var i = values.length - 1; i >= 0; i--) {
+           var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
+          conflictCell(input);
+         }; 
+        },
+        failure: function(errMsg) {
+            alert(errMsg);
+        }
   });
 };
 
@@ -119,17 +119,14 @@ function cleanBoard(){
   var cellInput = $('.dad-cell input');
   cellInput.prop('disabled', false);
   cellInput.val('');
-  cellInput.removeClass('individual-highlight');
-  cellInput.removeClass('highlight');
-  cellInput.removeClass('with-value');
+  cellInput.attr('class', '');
 };
 
 
 function load_grill (dificulty) {
 cleanBoard();
   $('#loading').toggleClass('invisible');
-
- $.ajax({url: "http://198.211.118.123:8080/board/" + dificulty}).then(function(data) {
+ $.ajax({url: "http://198.211.118.123:8080/board/" + dificulty}).done(function(data) {
    var values = data;
    for (var i = values.length - 1; i >= 0; i--) {
      var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
@@ -140,6 +137,7 @@ cleanBoard();
     $('#loading').toggleClass('invisible');
  });
 };
+
 
 $(document).ready(main);
 
