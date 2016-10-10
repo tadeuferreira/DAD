@@ -1,3 +1,4 @@
+
 // 2140000- Student name 1
 // 2140001- Student name 2
 // 2140002- Student name 3
@@ -98,6 +99,7 @@ function onClickCheckGame() {
 function checkConflict() {
   var jsonObj = getBoard();
   var strJSON = JSON.stringify(jsonObj);
+  console.log(strJSON);
   $.ajax({
     url: 'http://198.211.118.123:8080/board/check',
     type: 'POST',
@@ -162,4 +164,3 @@ function load_grill (dificulty) {
 
 
 $(document).ready(main);
-
