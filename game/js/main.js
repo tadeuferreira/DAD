@@ -1,4 +1,4 @@
-// 2140000- Student name 1
+// 2140238- Student name 1
 // 2140001- Student name 2
 // 2140002- Student name 3
 
@@ -17,7 +17,6 @@ var main = function(){
   });
 
   $('#btn-check').click(function(event) {
-    event.preventDefault();
     onClickCheckGame();
   });
 
