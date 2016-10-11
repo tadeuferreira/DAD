@@ -157,8 +157,8 @@ function checkConflict() {
     }else{
       endGame();
     }
-  }).fail(function (errMsg) {
-   alert(errMsg);
+  }).fail(function (errorThrown) {
+   console.log(errorThrown);
  }).always(function () {
   //
 });
@@ -203,8 +203,8 @@ function loadGrill (dificulty) {
      input.prop('disabled', true);
    };
    loadInitialCss(); 
- }).fail(function(){
-  alert("error");
+ }).fail(function (errorThrown) {
+   console.log(errorThrown);
 }).always(function(){
   $('#loading').toggleClass('invisible');
 });
