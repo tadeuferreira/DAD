@@ -35,32 +35,32 @@ var main = function(){
       for (var i = 0; i < x.length; i++) {
          
         $(x[i]).animate
-        ({ backgroundColor: "#FFBF00" }, 500 + delay);
+        ({ backgroundColor: "#FFBF00" }, 300 + delay);
 
         var input = $(x[i]).children();
 
         if(!input.hasClass('initial')){
           input.animate
-          ({ backgroundColor: "#FFBF00" }, 500 + delay);
+          ({ backgroundColor: "#FFBF00" }, 300 + delay);
         }
         
 
         setTimeout(function(cell) {
           $(cell).animate
-          ({ backgroundColor: "white" }, 500 + delay);
+          ({ backgroundColor: "white" }, 300 + delay);
 
 
           if(!$(cell).children().hasClass('initial')){
             $(cell).children().animate
-            ({ backgroundColor: "white" }, 500 + delay);
+            ({ backgroundColor: "white" }, 300 + delay);
           }
 
-        }, 400, x[i]);
+        }, 200, x[i]);
 
-        delay += 100;
+        delay += 50;
     };
 
-  });
+ });
 
   loadGrill('easy');
   //animateCell();
