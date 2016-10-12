@@ -34,49 +34,15 @@ var main = function(){
     checkQuadrant($inputCell);
   });
 
-  $(".dad-row").click(function(event){
-      var x = $(this).children();
-      var delay = 50;
-      for (var i = 0; i < x.length; i++) {
-         
-        $(x[i]).animate
-        ({ backgroundColor: "#FFBF00" }, 300 + delay);
-
-        var input = $(x[i]).children();
-
-        if(!input.hasClass('initial')){
-          input.animate
-          ({ backgroundColor: "#FFBF00" }, 300 + delay);
-        }
-        
-
-        setTimeout(function(cell) {
-          $(cell).animate
-          ({ backgroundColor: "white" }, 300 + delay);
-
-
-          if(!$(cell).children().hasClass('initial')){
-            $(cell).children().animate
-            ({ backgroundColor: "white" }, 300 + delay);
-          }
-
-        }, 200, x[i]);
-
-        delay += 50;
-    };
-
- });
-
   loadGrill('easy');
-  //animateCell();
 };
 
 function animateCell(){
 
-var values = $('.dad-row');
-      for (var i = values.length - 1; i >= 0; i--) {
-        var input = $('.dad-board').find('[data-line="' + values[i].line);
-      } 
+  var values = $('.dad-row');
+  for (var i = values.length - 1; i >= 0; i--) {
+    var input = $('.dad-board').find('[data-line="' + values[i].line);
+  } 
 };
 
 function loadInitialCss () {
@@ -128,9 +94,9 @@ function selectCell ($cellInput) {
 
 function conflictCell($cellInput) {
  $cellInput.removeClass('conflict');
-  $cellInput.toggleClass('conflict').delay(5000).queue('fx', function() { 
-    $cellInput.removeClass('conflict').dequeue(); 
-  });
+ $cellInput.toggleClass('conflict').delay(5000).queue('fx', function() { 
+  $cellInput.removeClass('conflict').dequeue(); 
+});
 };
 
 function onClickNewGame(){
@@ -144,18 +110,18 @@ function onClickCheckGame() {
   //if checkConflict didnt get any error or the game has ended
   if(conflicts != null){
   //there is conflict
-    if(conflicts.length > 0){  
-     loadConflictCss(conflicts);
-    }
-  }
+  if(conflicts.length > 0){  
+   loadConflictCss(conflicts);
+ }
+}
 
 };
 
 function loadConflictCss(conflicts){  
-      for (var i = conflicts.length - 1; i >= 0; i--) {
-        var $input = $('.dad-board').find('[data-line="' + conflicts[i].line + '"][data-column="' + conflicts[i].column + '"]');
-        conflictCell($input);
-      }
+  for (var i = conflicts.length - 1; i >= 0; i--) {
+    var $input = $('.dad-board').find('[data-line="' + conflicts[i].line + '"][data-column="' + conflicts[i].column + '"]');
+    conflictCell($input);
+  }
 }
 
 function checkConflict() {
@@ -171,16 +137,16 @@ function checkConflict() {
     contentType: "application/json;",
   }).done(function(data){
     if(data.finished === false){
-        result = data;
+      result = data;
     }else{
       endGame();
     }
   }).fail(function (errorThrown) {
    console.log(errorThrown);
  }).always(function () {
-    
-});
- return result.conflicts;
+  
+ });
+ return (result === null? null : result.conflicts);
 };
 
 function endGame () {
@@ -190,79 +156,95 @@ function endGame () {
 function checkLine ($cellInput) {
  var line = $cellInput.attr('data-line');
  var count = 0;
- console.log('checking line');
- $('.dad-board').find('[data-line="' + line + '"]').each(function(index, el) {
+ $cells = $('.dad-board').find('[data-line="' + line + '"]');
+ $cells.each(function(index, el) {
   //if one input of the line is empty , increase counter
-   if($(this).val() === ''){
+  if($(this).val() == ''){
     count++;
-   }
-  });
- console.log('line completed');
- if(count === 0){
- var conflicts = checkConflict();
+  }
+});
+ if(count == 0){
+   var conflicts = checkConflict();
  //if checkConflict didnt get any error or the game has ended
-  if(conflicts != null){
+ if(conflicts != null){
   //there is no error conflict
-    if(conflicts.length === 0){  
+  if(conflicts.length === 0){  
       //0 conflicts
      //do animation to line
-     console.log('animate');
-    }
-  }
+     animateCellsInput($cells);
+   }
+ }
 }
 };
 
 function checkColumn ($cellInput) {
- var column = $cellInput.attr('data-column');
- var count = 0;
- console.log('checking column');
- $('.dad-board').find('[data-column="' + column + '"]').each(function(index, el) {
+  var column = $cellInput.attr('data-column');
+  var count = 0;
+  $cells = $('.dad-board').find('[data-column="' + column + '"]');
+  $cells.each(function(index, el) {
   //if one input of the column is empty , increase counter
-   if($(this).val() === ''){
+  if($(this).val() == ''){
     count++;
-   }
-  });
- console.log('column completed');
- if(count === 0){
- var conflicts = checkConflict();
+  }
+});
+  if(count == 0){
+   var conflicts = checkConflict();
  //if checkConflict didnt get any error or the game has ended
-  if(conflicts != null){
+ if(conflicts != null){
   //there is no error conflict
-    if(conflicts.length === 0){  
+  if(conflicts.length === 0){  
       //0 conflicts
      //do animation to column
-     console.log('animate');
-    }
-  }
+     animateCellsInput($cells);
+   }
+ }
 }
 };
 
 function checkQuadrant ($cellInput) {
- var quadrant = $cellInput.attr('data-quadrant');
- var count = 0;
- console.log('checking quadrant');
- $('.dad-board').find('[data-quadrant="' + quadrant + '"]').each(function(index, el) {
+  var quadrant = $cellInput.attr('data-quadrant');
+  var count = 0;
+  $cells = $('.dad-board').find('[data-quadrant="' + quadrant + '"]');
+  $cells.each(function(index, el) {
   //if one input of the quadrant is empty , increase counter
-   if($(this).val() === ''){
+  if($(this).val() == ''){
     count++;
-   }
-  });
- console.log('quadrant completed');
- if(count === 0){
- var conflicts = checkConflict();
+  }
+});
+  if(count == 0){
+   var conflicts = checkConflict();
  //if checkConflict didnt get any error or the game has ended
-  if(conflicts != null){
+ if(conflicts != null){
   //there is no error conflict
-    if(conflicts.length === 0){  
+  if(conflicts.length === 0){  
       //0 conflicts
      //do animation to quadrant
-     console.log('animate');
-    }
-  }
+     animateCellsInput($cells);
+   }
+ }
 }
 };
 
+function animateCellsInput ($cellsInput) {
+  var delay = 50;
+  $cellsInput.each(function(index, el) {
 
+    var $input = $(this);
+    var $dad_cell = $input.parent('.dad-cell');
+    
+    $dad_cell.animate({ backgroundColor: "#FFBF00" }, 300 + delay);
+    if(!$input.hasClass('initial')){
+      $input.animate({ backgroundColor: "#FFBF00" }, 300 + delay);
+    }
+    setTimeout(function($cell) {
+      $cell.animate({ backgroundColor: "white" }, 300 + delay);
+      if(!$cell.children().hasClass('initial')){
+        $cell.children().animate({backgroundColor: "white" }, 300 + delay);
+      }
+    }, 200, $dad_cell);
+    delay += 50;
+  });
+};
 
 function cleanBoard(){
   var $cellInput = $('.dad-cell input');
@@ -301,7 +283,7 @@ function loadGrill (dificulty) {
    loadInitialCss(); 
  }).fail(function (errorThrown) {
    console.log(errorThrown);
-}).always(function(){
+ }).always(function(){
   $('#loading').toggleClass('invisible');
 });
 };
