@@ -24,9 +24,14 @@ var main = function(){
     selectCell($(this));
   });
 
-  $('.dad-cell input').change(function(event) {
-    checkVal($(this));
-    reloadCss($(this));
+  $('.dad-cell input').keyup(function(event) {
+    var $inputCell = $(this);
+    checkVal($inputCell);
+    reloadCss($inputCell);
+    
+    checkColumn($inputCell);
+    checkLine($inputCell);
+    checkQuadrant($inputCell);
   });
 
   $(".dad-row").click(function(event){
@@ -76,55 +81,55 @@ var values = $('.dad-row');
 
 function loadInitialCss () {
   $('.dad-cell input').each(function (index, value) { 
-    var cellInput = $(this);
-    cellInput.attr('min','1');
-    cellInput.attr('max','9');
-    if(cellInput.val() != ''){
-      cellInput.addClass('initial');
-    }else if (cellInput.val() === '') {
-      cellInput.removeClass('initial');
+    var $cellInput = $(this);
+    $cellInput.attr('min','1');
+    $cellInput.attr('max','9');
+    if($cellInput.val() != ''){
+      $cellInput.addClass('initial');
+    }else if ($cellInput.val() === '') {
+      $cellInput.removeClass('initial');
     }
   });
 };
 
-function reloadCss (cellInput) {
-  if(cellInput.val() != '' && !cellInput.hasClass('initial')){
-    cellInput.addClass('with-value');
-  }else if (cellInput.val() === '') {
-    cellInput.attr('class','');
+function reloadCss ($cellInput) {
+  if($cellInput.val() != '' && !$cellInput.hasClass('initial')){
+    $cellInput.addClass('with-value');
+  }else if ($cellInput.val() === '') {
+    $cellInput.attr('class','');
   }
 };
 
-function checkVal (cellInput) {
-  if(Number(cellInput.val()) < Number(cellInput.attr('min')) || Number(cellInput.val()) > Number(cellInput.attr('max'))){
-    cellInput.val('');
+function checkVal ($cellInput) {
+  if(Number($cellInput.val()) < Number($cellInput.attr('min')) || Number($cellInput.val()) > Number($cellInput.attr('max'))){
+    $cellInput.val('');
   }
 };
 
 function highlightCells (val) {
   $('.dad-cell input').each(function (index, value) { 
     //Remove all previously highlitghted nummbers
-    var cellInput = $(this);
-    cellInput.removeClass('highlight');
+    var $cellInput = $(this);
+    $cellInput.removeClass('highlight');
     
-    if(cellInput.val() === val ){
-      cellInput.toggleClass('highlight').delay(5000).queue('fx', function() { 
-        cellInput.removeClass('highlight').dequeue(); 
+    if($cellInput.val() === val ){
+      $cellInput.toggleClass('highlight').delay(5000).queue('fx', function() { 
+        $cellInput.removeClass('highlight').dequeue(); 
       });
     }
   });
 };
 
-function selectCell (cellInput) {
-  if(cellInput.val() != ''){
-    cellInput.toggleClass('individual-highlight');
+function selectCell ($cellInput) {
+  if($cellInput.val() != ''){
+    $cellInput.toggleClass('individual-highlight');
   }
 };
 
-function conflictCell(cellInput) {
-  cellInput.removeClass('conflict');
-  cellInput.toggleClass('conflict').delay(5000).queue('fx', function() { 
-    cellInput.removeClass('conflict').dequeue(); 
+function conflictCell($cellInput) {
+ $cellInput.removeClass('conflict');
+  $cellInput.toggleClass('conflict').delay(5000).queue('fx', function() { 
+    $cellInput.removeClass('conflict').dequeue(); 
   });
 };
 
@@ -134,57 +139,148 @@ function onClickNewGame(){
 };
 
 function onClickCheckGame() {
-  checkConflict();
+  
+  var conflicts = checkConflict();
+  //if checkConflict didnt get any error or the game has ended
+  if(conflicts != null){
+  //there is conflict
+    if(conflicts.length > 0){  
+     loadConflictCss(conflicts);
+    }
+  }
+
 };
+
+function loadConflictCss(conflicts){  
+      for (var i = conflicts.length - 1; i >= 0; i--) {
+        var $input = $('.dad-board').find('[data-line="' + conflicts[i].line + '"][data-column="' + conflicts[i].column + '"]');
+        conflictCell($input);
+      }
+}
 
 function checkConflict() {
   var jsonObj = getBoard();
   var strJSON = JSON.stringify(jsonObj);
+  var result = null;
   $.post({
     url: 'http://198.211.118.123:8080/board/check',
     type: 'POST',
     data: strJSON,
+    async: false,
     dataType: "json",
     contentType: "application/json;",
   }).done(function(data){
-    console.log(data);
     if(data.finished === false){
-      var values = data.conflicts;
-      for (var i = values.length - 1; i >= 0; i--) {
-        var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
-        conflictCell(input);
-      }
+        result = data;
     }else{
       endGame();
     }
   }).fail(function (errorThrown) {
    console.log(errorThrown);
  }).always(function () {
-  //
+    
 });
+ return result.conflicts;
 };
 
 function endGame () {
   // body... 
 };
 
+function checkLine ($cellInput) {
+ var line = $cellInput.attr('data-line');
+ var count = 0;
+ console.log('checking line');
+ $('.dad-board').find('[data-line="' + line + '"]').each(function(index, el) {
+  //if one input of the line is empty , increase counter
+   if($(this).val() === ''){
+    count++;
+   }
+  });
+ console.log('line completed');
+ if(count === 0){
+ var conflicts = checkConflict();
+ //if checkConflict didnt get any error or the game has ended
+  if(conflicts != null){
+  //there is no error conflict
+    if(conflicts.length === 0){  
+      //0 conflicts
+     //do animation to line
+     console.log('animate');
+    }
+  }
+}
+};
+
+function checkColumn ($cellInput) {
+ var column = $cellInput.attr('data-column');
+ var count = 0;
+ console.log('checking column');
+ $('.dad-board').find('[data-column="' + column + '"]').each(function(index, el) {
+  //if one input of the column is empty , increase counter
+   if($(this).val() === ''){
+    count++;
+   }
+  });
+ console.log('column completed');
+ if(count === 0){
+ var conflicts = checkConflict();
+ //if checkConflict didnt get any error or the game has ended
+  if(conflicts != null){
+  //there is no error conflict
+    if(conflicts.length === 0){  
+      //0 conflicts
+     //do animation to column
+     console.log('animate');
+    }
+  }
+}
+};
+
+function checkQuadrant ($cellInput) {
+ var quadrant = $cellInput.attr('data-quadrant');
+ var count = 0;
+ console.log('checking quadrant');
+ $('.dad-board').find('[data-quadrant="' + quadrant + '"]').each(function(index, el) {
+  //if one input of the quadrant is empty , increase counter
+   if($(this).val() === ''){
+    count++;
+   }
+  });
+ console.log('quadrant completed');
+ if(count === 0){
+ var conflicts = checkConflict();
+ //if checkConflict didnt get any error or the game has ended
+  if(conflicts != null){
+  //there is no error conflict
+    if(conflicts.length === 0){  
+      //0 conflicts
+     //do animation to quadrant
+     console.log('animate');
+    }
+  }
+}
+};
+
+
+
 function cleanBoard(){
-  var cellInput = $('.dad-cell input');
-  cellInput.prop('disabled', false);
-  cellInput.val('');
-  cellInput.attr('class', '');
+  var $cellInput = $('.dad-cell input');
+  $cellInput.prop('disabled', false);
+  $cellInput.val('');
+  $cellInput.attr('class', '');
 };
 
 function getBoard(){
   var jsonObj = [];
   $('.dad-cell input').each( function (index, value){
-    var element = $(this);
-    if(element.val() != ''){
+    var $element = $(this);
+    if($element.val() != ''){
       item = {};
-      item ["line"] = Number(element.attr("data-line"));
-      item ["column"] = Number(element.attr("data-column"));
-      item ["value"] = Number(element.val());
-      item ["fixed"] = element.prop('disabled');
+      item ["line"] = Number($element.attr("data-line"));
+      item ["column"] = Number($element.attr("data-column"));
+      item ["value"] = Number($element.val());
+      item ["fixed"] = $element.prop('disabled');
       jsonObj.push(item);
     }    
   });
@@ -198,9 +294,9 @@ function loadGrill (dificulty) {
   $.getJSON("http://198.211.118.123:8080/board/" + dificulty).done(function(data) {
    var values = data;
    for (var i = values.length - 1; i >= 0; i--) {
-     var input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
-     input.val(values[i].value);
-     input.prop('disabled', true);
+     var $input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
+     $input.val(values[i].value);
+     $input.prop('disabled', true);
    };
    loadInitialCss(); 
  }).fail(function (errorThrown) {
@@ -208,6 +304,10 @@ function loadGrill (dificulty) {
 }).always(function(){
   $('#loading').toggleClass('invisible');
 });
+};
+
+function quadrantLoader(){
+
 };
 
 
