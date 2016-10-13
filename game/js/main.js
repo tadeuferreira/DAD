@@ -26,21 +26,16 @@ var main = function(){
     selectCell($(this));
   });
 
-  $('.dad-cell input').keyup(function(event) {
+  $('.dad-cell input').change(function(event) {
     var $inputCell = $(this);
     checkVal($inputCell);
     reloadCss($inputCell);
     
-    checkColumn($inputCell);
-    checkLine($inputCell);
-    checkQuadrant($inputCell);
-
-   
+    checkPartialCompletion($inputCell,'column');
+    checkPartialCompletion($inputCell,'line');
+    checkPartialCompletion($inputCell,'quadrant');
+    checkFullCompletion();
   });
-
-  
-  loadGrill('easy');
- 
 };
 
 function animateCell(){
@@ -111,7 +106,7 @@ function onClickNewGame(){
 };
 
 function onClickCheckGame() {
-  
+
   var conflicts = checkConflict();
   //if checkConflict didnt get any error or the game has ended
   if(conflicts != null){
@@ -133,26 +128,22 @@ function loadConflictCss(conflicts){
 function checkConflict() {
   var jsonObj = getBoard();
   var strJSON = JSON.stringify(jsonObj);
-  var result = null;
   $.post({
     url: 'http://198.211.118.123:8080/board/check',
     type: 'POST',
     data: strJSON,
-    async: false,
     dataType: "json",
     contentType: "application/json;",
   }).done(function(data){
-    if(data.finished === false){
-      result = data;
+    if(data.finished == false){
+      loadConflictCss(data.conflicts);
     }else{
       endGame();
     }
   }).fail(function (errorThrown) {
    console.log(errorThrown);
  }).always(function () {
-  
  });
- return (result === null? null : result.conflicts);
 };
 
 function endGame () {
@@ -164,90 +155,44 @@ function endGame () {
   $( "#dialog" ).dialog();
 };
 
-function checkLine ($cellInput) {
- var line = $cellInput.attr('data-line');
+function checkPartialCompletion($cellInput,type) {
+ var val = $cellInput.attr('data-'+type);
  var count = 0;
- $cells = $('.dad-board').find('[data-line="' + line + '"]');
+ $cells = $('.dad-board').find('[data-'+type+'="' + val + '"]');
  $cells.each(function(index, el) {
-  //if one input of the line is empty , increase counter
+  //if one input is empty , increase counter
   if($(this).val() == ''){
     count++;
   }
 });
  if(count == 0){
-   var conflicts = checkConflict();
- //if checkConflict didnt get any error or the game has ended
- if(conflicts != null){
-  //there is no error conflict
-  if(conflicts.length === 0){  
-      //0 conflicts
-     //do animation to line
-     animateCellsInput($cells);
-   }
+   animateCellsInput($cells);
  }
-}
 };
 
-function checkColumn ($cellInput) {
-  var column = $cellInput.attr('data-column');
+function checkFullCompletion() {
   var count = 0;
-  $cells = $('.dad-board').find('[data-column="' + column + '"]');
-  $cells.each(function(index, el) {
-  //if one input of the column is empty , increase counter
-  if($(this).val() == ''){
-    count++;
+  $('.dad-cell input').each(function(index, el) {
+    if($(this).val() == ''){
+      count++;
+    }
+  });
+  if(count == 0)){
+    //check if the game have no conflicts
+    checkConflict();
   }
-});
-  if(count == 0){
-   var conflicts = checkConflict();
- //if checkConflict didnt get any error or the game has ended
- if(conflicts != null){
-  //there is no error conflict
-  if(conflicts.length === 0){  
-      //0 conflicts
-     //do animation to column
-     animateCellsInput($cells);
-   }
- }
 }
-};
-
-function checkQuadrant ($cellInput) {
-  var quadrant = $cellInput.attr('data-quadrant');
-  var count = 0;
-  $cells = $('.dad-board').find('[data-quadrant="' + quadrant + '"]');
-  $cells.each(function(index, el) {
-  //if one input of the quadrant is empty , increase counter
-  if($(this).val() == ''){
-    count++;
-  }
-});
-  if(count == 0){
-   var conflicts = checkConflict();
- //if checkConflict didnt get any error or the game has ended
- if(conflicts != null){
-  //there is no error conflict
-  if(conflicts.length === 0){  
-      //0 conflicts
-     //do animation to quadrant
-     animateCellsInput($cells);
-   }
- }
-}
-};
 
 function animateCellsInput ($cellsInput) {
   var delay = 50;
   $cellsInput.each(function(index, el) {
-
     var $input = $(this);
-    var $dad_cell = $input.parent('.dad-cell');
-    
+    var $dad_cell = $input.parent('.dad-cell');    
     $dad_cell.animate({ backgroundColor: "#FFBF00" }, 500 + delay);
+
     if(!$input.hasClass('initial') && !$input.hasClass('with-value')){
       $input.animate({ backgroundColor: "#FFBF00" }, 500 + delay);
     }
-
     setTimeout(function($cell) {
       $cell.animate({ backgroundColor: "white" }, 500 + delay);
       if(!$cell.children().hasClass('initial') && !$cell.children().hasClass('with-value')){
@@ -289,38 +234,38 @@ function atrQuadrant(){
     var column = $(this).attr("data-column");
     
     if(line >= 0 && line < 3 && column >= 0 && column < 3){
-       $(this).attr("data-quadrant","1");
-    
-    }else if(line >= 0 && line < 3 && column >= 3 && column < 6){
-      $(this).attr("data-quadrant","2");
-    
-    }else if(line >= 0 && line < 3 && column >= 6 && column < 9){
-      $(this).attr("data-quadrant","3");
-    
-    }
+     $(this).attr("data-quadrant","1");
 
-    else if(line >= 3 && line < 6 && column >= 0 && column < 3){
-       $(this).attr("data-quadrant","4");
+   }else if(line >= 0 && line < 3 && column >= 3 && column < 6){
+    $(this).attr("data-quadrant","2");
     
-    }else if(line >= 3 && line < 6 && column >= 3 && column < 6){
-      $(this).attr("data-quadrant","5");
+  }else if(line >= 0 && line < 3 && column >= 6 && column < 9){
+    $(this).attr("data-quadrant","3");
     
+  }
 
-    }else if(line >= 3 && line < 6 && column >= 6 && column < 9){
-      $(this).attr("data-quadrant","6");
-    }
+  else if(line >= 3 && line < 6 && column >= 0 && column < 3){
+   $(this).attr("data-quadrant","4");
 
-    else if(line >= 6 && line < 9 && column >= 0 && column < 3){
-       $(this).attr("data-quadrant","7");
-    
-    }else if(line >= 6 && line < 9 && column >= 3 && column < 6){
-      $(this).attr("data-quadrant","8");
-    
+ }else if(line >= 3 && line < 6 && column >= 3 && column < 6){
+  $(this).attr("data-quadrant","5");
 
-    }else if(line >= 6 && line < 9 && column >= 6 && column < 9){
-      $(this).attr("data-quadrant","9");
-    }
-    });
+
+}else if(line >= 3 && line < 6 && column >= 6 && column < 9){
+  $(this).attr("data-quadrant","6");
+}
+
+else if(line >= 6 && line < 9 && column >= 0 && column < 3){
+ $(this).attr("data-quadrant","7");
+
+}else if(line >= 6 && line < 9 && column >= 3 && column < 6){
+  $(this).attr("data-quadrant","8");
+
+
+}else if(line >= 6 && line < 9 && column >= 6 && column < 9){
+  $(this).attr("data-quadrant","9");
+}
+});
 }
 
 function loadGrill (dificulty) {
@@ -340,8 +285,8 @@ function loadGrill (dificulty) {
    loadInitialCss(); 
    
    setTimeout(function(){
-      window.timer++;
-   }, 1000);
+    window.timer++;
+  }, 1000);
 
  }).fail(function (errorThrown) {
    console.log(errorThrown);
@@ -356,9 +301,9 @@ function secondsTimeSpanToHMS(s) {
     var m = Math.floor(s/60); //Get remaining minutes
     s -= m*60;
     return h+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s); //zero padding on minutes and seconds
-}
+  }
 
 
 
-$(document).ready(main);
+  $(document).ready(main);
 
