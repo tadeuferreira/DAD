@@ -77,8 +77,7 @@ function highlightCells (val) {
   $('.dad-cell input').each(function (index, value) { 
     //Remove all previously highlitghted nummbers
     var $cellInput = $(this);
-    $cellInput.removeClass('highlight');
-    
+    $cellInput.removeClass('highlight');  
     if($cellInput.val() === val ){
       $cellInput.toggleClass('highlight').delay(5000).queue('fx', function() { 
         $cellInput.removeClass('highlight').dequeue(); 
@@ -106,7 +105,6 @@ function onClickNewGame(){
 };
 
 function onClickCheckGame() {
-
   var conflicts = checkConflict();
   //if checkConflict didnt get any error or the game has ended
   if(conflicts != null){
@@ -170,18 +168,18 @@ function checkPartialCompletion($cellInput,type) {
  }
 };
 
-function checkFullCompletion() {
+function checkFullCompletion(){
   var count = 0;
   $('.dad-cell input').each(function(index, el) {
     if($(this).val() == ''){
       count++;
     }
   });
-  if(count == 0)){
+  if(count == 0){
     //check if the game have no conflicts
     checkConflict();
   }
-}
+};
 
 function animateCellsInput ($cellsInput) {
   var delay = 50;
