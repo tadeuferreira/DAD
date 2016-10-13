@@ -4,10 +4,12 @@
 
 // Implementation:
 
-window.timer = 0;
+
 
 var main = function(){
   'use strict';
+  var timer = 0;
+  window.timer = timer;
 
   $('#highlightButtons').find('button').click(function(event) {
     var value = $(this).val();
@@ -76,12 +78,13 @@ function checkVal ($cellInput) {
 function highlightCells (val) {
   $('.dad-cell input').each(function (index, value) { 
     //Remove all previously highlitghted nummbers
-    var $cellInput = $(this);
-    $cellInput.removeClass('highlight');  
+    var $cellInput = $(this); 
     if($cellInput.val() === val ){
       $cellInput.toggleClass('highlight').delay(5000).queue('fx', function() { 
         $cellInput.removeClass('highlight').dequeue(); 
       });
+    }else{
+       $cellInput.removeClass('highlight');  
     }
   });
 };
@@ -149,7 +152,7 @@ function endGame () {
     $(this).toggleClass("finished");
   });
   $("#message").text("Game Won, congratulations!!");
-  $("#time").text("Time: " + secondsTimeSpanToHMS(window.timer));
+  $("#time").text("Time: " + secondsTimeSpanToHMS(window.timer/1000));
   $( "#dialog" ).dialog();
 };
 
@@ -284,7 +287,7 @@ function loadGrill (dificulty) {
    
    setTimeout(function(){
     window.timer++;
-  }, 1000);
+  }, 1);
 
  }).fail(function (errorThrown) {
    console.log(errorThrown);
