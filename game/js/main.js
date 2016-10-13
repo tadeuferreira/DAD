@@ -4,6 +4,8 @@
 
 // Implementation:
 
+window.timer = 0;
+
 var main = function(){
   'use strict';
 
@@ -32,9 +34,13 @@ var main = function(){
     checkColumn($inputCell);
     checkLine($inputCell);
     checkQuadrant($inputCell);
+
+   
   });
 
+  
   loadGrill('easy');
+ 
 };
 
 function animateCell(){
@@ -150,7 +156,12 @@ function checkConflict() {
 };
 
 function endGame () {
-  // body... 
+  $('.dad-cell input.with-value').each(function () {
+    $(this).toggleClass("finished");
+  });
+  $("#message").text("Game Won, congratulations!!");
+  $("#time").text("Time: " + secondsTimeSpanToHMS(window.timer));
+  $( "#dialog" ).dialog();
 };
 
 function checkLine ($cellInput) {
@@ -232,14 +243,15 @@ function animateCellsInput ($cellsInput) {
     var $input = $(this);
     var $dad_cell = $input.parent('.dad-cell');
     
-    $dad_cell.animate({ backgroundColor: "#FFBF00" }, 300 + delay);
-    if(!$input.hasClass('initial')){
-      $input.animate({ backgroundColor: "#FFBF00" }, 300 + delay);
+    $dad_cell.animate({ backgroundColor: "#FFBF00" }, 500 + delay);
+    if(!$input.hasClass('initial') && !$input.hasClass('with-value')){
+      $input.animate({ backgroundColor: "#FFBF00" }, 500 + delay);
     }
+
     setTimeout(function($cell) {
-      $cell.animate({ backgroundColor: "white" }, 300 + delay);
-      if(!$cell.children().hasClass('initial')){
-        $cell.children().animate({backgroundColor: "white" }, 300 + delay);
+      $cell.animate({ backgroundColor: "white" }, 500 + delay);
+      if(!$cell.children().hasClass('initial') && !$cell.children().hasClass('with-value')){
+        $cell.children().animate({backgroundColor: "white" }, 500 + delay);
       }
     }, 200, $dad_cell);
     delay += 50;
@@ -270,17 +282,67 @@ function getBoard(){
   return jsonObj;
 };
 
+function atrQuadrant(){
+  $('.dad-cell input').each( function (index, value){
+
+    var line = $(this).attr("data-line");
+    var column = $(this).attr("data-column");
+    
+    if(line >= 0 && line < 3 && column >= 0 && column < 3){
+       $(this).attr("data-quadrant","1");
+    
+    }else if(line >= 0 && line < 3 && column >= 3 && column < 6){
+      $(this).attr("data-quadrant","2");
+    
+    }else if(line >= 0 && line < 3 && column >= 6 && column < 9){
+      $(this).attr("data-quadrant","3");
+    
+    }
+
+    else if(line >= 3 && line < 6 && column >= 0 && column < 3){
+       $(this).attr("data-quadrant","4");
+    
+    }else if(line >= 3 && line < 6 && column >= 3 && column < 6){
+      $(this).attr("data-quadrant","5");
+    
+
+    }else if(line >= 3 && line < 6 && column >= 6 && column < 9){
+      $(this).attr("data-quadrant","6");
+    }
+
+    else if(line >= 6 && line < 9 && column >= 0 && column < 3){
+       $(this).attr("data-quadrant","7");
+    
+    }else if(line >= 6 && line < 9 && column >= 3 && column < 6){
+      $(this).attr("data-quadrant","8");
+    
+
+    }else if(line >= 6 && line < 9 && column >= 6 && column < 9){
+      $(this).attr("data-quadrant","9");
+    }
+    });
+}
+
 function loadGrill (dificulty) {
   cleanBoard();
+  
   $('#loading').toggleClass('invisible');
   $.getJSON("http://198.211.118.123:8080/board/" + dificulty).done(function(data) {
    var values = data;
+   
    for (var i = values.length - 1; i >= 0; i--) {
      var $input = $('.dad-board').find('[data-line="' + values[i].line + '"][data-column="' + values[i].column + '"]');
      $input.val(values[i].value);
      $input.prop('disabled', true);
    };
+   
+   atrQuadrant();
    loadInitialCss(); 
+   
+   setTimeout(function(){
+      window.timer++;
+   }, 1000);
+
  }).fail(function (errorThrown) {
    console.log(errorThrown);
  }).always(function(){
@@ -288,9 +350,13 @@ function loadGrill (dificulty) {
 });
 };
 
-function quadrantLoader(){
-
-};
+function secondsTimeSpanToHMS(s) {
+    var h = Math.floor(s/3600); //Get whole hours
+    s -= h*3600;
+    var m = Math.floor(s/60); //Get remaining minutes
+    s -= m*60;
+    return h+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s); //zero padding on minutes and seconds
+}
 
 
 

@@ -79,6 +79,7 @@ input.with-value{
   background-color: rgba(234,162,89,0.6);
 }
 
+
 input.conflict{
   background-color: rgba(235,86,86,0.6) !important;
 }
@@ -88,7 +89,7 @@ input.individual-conflict{
 }
 
 input.finished{
-  background-color: rgba(179,234,89,0.6); !important;
+  background-color: rgba(179,234,89,0.6) !important;
 }
 
 .dad-row .dad-cell input.individual-highlight{
