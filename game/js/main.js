@@ -177,22 +177,18 @@ function checkFullCompletion(){
 };
 
 function animateCellsInput ($cellsInput) {
-  var delay = 50;
+  var defaultDelay = 500;
+  var delay = 100;
   $cellsInput.each(function(index, el) {
     var $input = $(this);
-    var $dad_cell = $input.parent('.dad-cell');    
-    $dad_cell.animate({ backgroundColor: "#FFAF00" }, 500 + delay);
+    var $dad_cell = $input.parent('.dad-cell');  
 
-    if(!$input.hasClass('initial') && !$input.hasClass('with-value')){
-      $input.animate({ backgroundColor: "#FFAF00" }, 500 + delay);
-    }
-    setTimeout(function($cell) {
-      $cell.animate({ backgroundColor: "white" }, 500 + delay);
-      if(!$cell.children().hasClass('initial') && !$cell.children().hasClass('with-value')){
-        $cell.children().animate({backgroundColor: "white" }, 500 + delay);
-      }
-    }, 200, $dad_cell);
-    delay += 50;
+    $dad_cell
+    .delay(delay*(index+1))
+    .animate({ backgroundColor: "#FFAF00" },defaultDelay)
+    .delay(delay)
+    .animate({backgroundColor: "white" },defaultDelay);
+
   });
 };
 
