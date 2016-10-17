@@ -8,10 +8,9 @@
 
 var main = function(){
   'use strict';
-
   var timeNow = 0;
-
   atrQuadrant();
+  loadProjectAuthors();
 
   $('#highlightButtons').find('button').click(function(event) {
     var value = $(this).val();
@@ -111,7 +110,7 @@ function loadConflictCss(conflicts){
     var $input = $('.dad-board').find('[data-line="' + conflicts[i].line + '"][data-column="' + conflicts[i].column + '"]');
     conflictCell($input);
   }
-}
+};
 
 function checkConflict($cells) {
   var jsonObj = getBoard();
@@ -224,43 +223,28 @@ function getBoard(){
 
 function atrQuadrant(){
   $('.dad-cell input').each( function (index, value){
-
     var line = $(this).attr("data-line");
     var column = $(this).attr("data-column");
-    
     if(line >= 0 && line < 3 && column >= 0 && column < 3){
-     $(this).attr("data-quadrant","1");
-
-   }else if(line >= 0 && line < 3 && column >= 3 && column < 6){
-    $(this).attr("data-quadrant","2");
-    
-  }else if(line >= 0 && line < 3 && column >= 6 && column < 9){
-    $(this).attr("data-quadrant","3");
-    
-  }
-
-  else if(line >= 3 && line < 6 && column >= 0 && column < 3){
-   $(this).attr("data-quadrant","4");
-
- }else if(line >= 3 && line < 6 && column >= 3 && column < 6){
-  $(this).attr("data-quadrant","5");
-
-
-}else if(line >= 3 && line < 6 && column >= 6 && column < 9){
-  $(this).attr("data-quadrant","6");
-}
-
-else if(line >= 6 && line < 9 && column >= 0 && column < 3){
- $(this).attr("data-quadrant","7");
-
-}else if(line >= 6 && line < 9 && column >= 3 && column < 6){
-  $(this).attr("data-quadrant","8");
-
-
-}else if(line >= 6 && line < 9 && column >= 6 && column < 9){
-  $(this).attr("data-quadrant","9");
-}
-});
+      $(this).attr("data-quadrant","1");
+    }else if(line >= 0 && line < 3 && column >= 3 && column < 6){
+      $(this).attr("data-quadrant","2");   
+    }else if(line >= 0 && line < 3 && column >= 6 && column < 9){
+      $(this).attr("data-quadrant","3");  
+    }else if(line >= 3 && line < 6 && column >= 0 && column < 3){
+      $(this).attr("data-quadrant","4");
+    }else if(line >= 3 && line < 6 && column >= 3 && column < 6){
+      $(this).attr("data-quadrant","5");
+    }else if(line >= 3 && line < 6 && column >= 6 && column < 9){
+      $(this).attr("data-quadrant","6");
+    }else if(line >= 6 && line < 9 && column >= 0 && column < 3){
+      $(this).attr("data-quadrant","7");
+    }else if(line >= 6 && line < 9 && column >= 3 && column < 6){
+      $(this).attr("data-quadrant","8");
+    }else if(line >= 6 && line < 9 && column >= 6 && column < 9){
+      $(this).attr("data-quadrant","9");
+    }
+  });
 };
 
 function loadGrill (dificulty) {
@@ -292,4 +276,24 @@ function secondsTimeSpanToHMS(s) {
   return h+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s); //zero padding on minutes and seconds
 };
 
-  $(document).ready(main);
+function loadProjectAuthors() {
+  $author = $('.thumbnail');
+
+  $author.last().addClass('invisible');
+
+  $author.eq(0).find('h3').text('2140238');
+  $author.eq(0).find('p').text('Luiz Tadeu');
+  $author.eq(0).find('img').attr('src','img/f1.jpg').attr('width','400').attr('height','400');
+
+
+  $author.eq(1).find('h3').text('2110094');
+  $author.eq(1).find('p').text('Bruno Henriques');
+  $author.eq(1).find('img').attr('src','img/...');
+
+
+  $author.eq(2).find('h3').text('2140666');
+  $author.eq(2).find('p').text('Luiz Daniel');
+  $author.eq(2).find('img').attr('src','img/...');
+};
+
+$(document).ready(main);
