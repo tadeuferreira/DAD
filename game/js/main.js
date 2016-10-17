@@ -10,6 +10,7 @@ var main = function(){
   'use strict';
   var timer = 0;
   window.timer = timer;
+  atrQuadrant();
 
   $('#highlightButtons').find('button').click(function(event) {
     var value = $(this).val();
@@ -38,14 +39,6 @@ var main = function(){
     checkPartialCompletion($inputCell,'quadrant');
     checkFullCompletion();
   });
-};
-
-function animateCell(){
-
-  var values = $('.dad-row');
-  for (var i = values.length - 1; i >= 0; i--) {
-    var input = $('.dad-board').find('[data-line="' + values[i].line);
-  } 
 };
 
 function loadInitialCss () {
@@ -108,15 +101,7 @@ function onClickNewGame(){
 };
 
 function onClickCheckGame() {
-  var conflicts = checkConflict();
-  //if checkConflict didnt get any error or the game has ended
-  if(conflicts != null){
-  //there is conflict
-  if(conflicts.length > 0){  
-   loadConflictCss(conflicts);
- }
-}
-
+  checkConflict(null);
 };
 
 function loadConflictCss(conflicts){  
@@ -126,7 +111,7 @@ function loadConflictCss(conflicts){
   }
 }
 
-function checkConflict() {
+function checkConflict($cells) {
   var jsonObj = getBoard();
   var strJSON = JSON.stringify(jsonObj);
   $.post({
@@ -136,8 +121,11 @@ function checkConflict() {
     dataType: "json",
     contentType: "application/json;",
   }).done(function(data){
-    if(data.finished == false){
+    if(data.finished == false && data.conflicts.length <= 0){
       loadConflictCss(data.conflicts);
+      if($cells != null){
+        animateCellsInput($cells);
+      }
     }else{
       endGame();
     }
@@ -167,7 +155,7 @@ function checkPartialCompletion($cellInput,type) {
   }
 });
  if(count == 0){
-   animateCellsInput($cells);
+   checkConflict($cells);
  }
 };
 
@@ -178,9 +166,10 @@ function checkFullCompletion(){
       count++;
     }
   });
+  //check if the game have no empty cells
   if(count == 0){
-    //check if the game have no conflicts
-    checkConflict();
+    //calls the check conflict function   
+    checkConflict(null);
   }
 };
 
@@ -189,10 +178,10 @@ function animateCellsInput ($cellsInput) {
   $cellsInput.each(function(index, el) {
     var $input = $(this);
     var $dad_cell = $input.parent('.dad-cell');    
-    $dad_cell.animate({ backgroundColor: "#FFBF00" }, 500 + delay);
+    $dad_cell.animate({ backgroundColor: "#FFAF00" }, 500 + delay);
 
     if(!$input.hasClass('initial') && !$input.hasClass('with-value')){
-      $input.animate({ backgroundColor: "#FFBF00" }, 500 + delay);
+      $input.animate({ backgroundColor: "#FFAF00" }, 500 + delay);
     }
     setTimeout(function($cell) {
       $cell.animate({ backgroundColor: "white" }, 500 + delay);
@@ -215,7 +204,7 @@ function getBoard(){
   var jsonObj = [];
   $('.dad-cell input').each( function (index, value){
     var $element = $(this);
-    if($element.val() != ''){
+    if($element.val()){
       item = {};
       item ["line"] = Number($element.attr("data-line"));
       item ["column"] = Number($element.attr("data-column"));
@@ -281,8 +270,6 @@ function loadGrill (dificulty) {
      $input.val(values[i].value);
      $input.prop('disabled', true);
    };
-   
-   atrQuadrant();
    loadInitialCss(); 
    
    setTimeout(function(){
