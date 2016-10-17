@@ -77,9 +77,9 @@ function highlightCells (val) {
         $cellInput.removeClass('highlight').dequeue(); 
       });
     }else{
-       $cellInput.removeClass('highlight');  
-    }
-  });
+     $cellInput.removeClass('highlight');  
+   }
+ });
 };
 
 function selectCell ($cellInput) {
@@ -121,18 +121,21 @@ function checkConflict($cells) {
     dataType: "json",
     contentType: "application/json;",
   }).done(function(data){
-    if(data.finished == false && data.conflicts.length <= 0){
-      loadConflictCss(data.conflicts);
-      if($cells != null){
+    if(data.finished == false){
+     if(data.conflicts.length > 0){
+       loadConflictCss(data.conflicts);
+     }else{
+       if($cells != null){
         animateCellsInput($cells);
       }
-    }else{
-      endGame();
     }
-  }).fail(function (errorThrown) {
-   console.log(errorThrown);
- }).always(function () {
- });
+  }else{
+    endGame();
+  }
+}).fail(function (errorThrown) {
+ console.log(errorThrown);
+}).always(function () {
+});
 };
 
 function endGame () {
