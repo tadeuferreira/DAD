@@ -186,18 +186,28 @@ function checkFullCompletion(){
 function animateCellsInput ($cellsInput) {
   var defaultDelay = 500;
   var delay = 100;
+  var len = $cellsInput.length;
   $cellsInput.each(function(index, el) {
-    var $input = $(this);
-    var $dad_cell = $input.parent('.dad-cell'); 
-    if(!$dad_cell.hasClass('animated')){
-    $dad_cell.addClass('animated');
-    $dad_cell
-    .delay(delay*(index+1))
-    .animate({ backgroundColor: "#FFAF00" },defaultDelay)  
-    .delay(delay)
-    .animate({backgroundColor: "white" },defaultDelay);
-    $dad_cell.removeClass('animated');
-    }   
+    if(!$(this).hasClass('animated')){
+      var $input = $(this);
+      $input.addClass('animated');
+      var $dad_cell = $input.parent('.dad-cell'); 
+      $dad_cell
+      .delay(delay*(index+1))
+      .animate({ backgroundColor: "#FFAF00" },defaultDelay)  
+      .delay(delay)
+      .animate({backgroundColor: "white" },
+      {
+        duration: defaultDelay,
+        complete: function (argument) {
+         if(index == len -1){
+           $cellsInput.each(function(index, el) {
+            $(this).removeClass('animated');
+          });
+         }
+       }   
+     });
+    } 
   });
 };
 
