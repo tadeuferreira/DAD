@@ -288,7 +288,7 @@ function loadProjectAuthors() {
 
   $author.eq(1).find('h3').text('2110094');
   $author.eq(1).find('p').text('Bruno Henriques');
-  $author.eq(1).find('img').attr('src','img/...');
+  $author.eq(1).find('img').attr('src','img/f2.jpg').attr('height',400).attr('width',400);
 
 
   $author.eq(2).find('h3').text('2140666');
