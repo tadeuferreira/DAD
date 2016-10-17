@@ -283,7 +283,7 @@ function loadProjectAuthors() {
 
   $author.eq(0).find('h3').text('2140238');
   $author.eq(0).find('p').text('Luiz Tadeu');
-  $author.eq(0).find('img').attr('src','img/f1.jpg').attr('width','400').attr('height','400');
+  $author.eq(0).find('img').attr('src','img/f1.jpg').attr('height',400).attr('width',400);
 
 
   $author.eq(1).find('h3').text('2110094');
@@ -293,7 +293,7 @@ function loadProjectAuthors() {
 
   $author.eq(2).find('h3').text('2140666');
   $author.eq(2).find('p').text('Luiz Daniel');
-  $author.eq(2).find('img').attr('src','img/...');
+  $author.eq(2).find('img').attr('src','img/f3.jpg').attr('height',400).attr('width',400);
 };
 
 $(document).ready(main);
