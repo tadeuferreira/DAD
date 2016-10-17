@@ -39,6 +39,8 @@ var main = function(){
     checkPartialCompletion($inputCell,'quadrant');
     checkFullCompletion();
   });
+
+  onClickNewGame();
 };
 
 function loadInitialCss () {
@@ -140,8 +142,8 @@ function checkConflict($cells) {
 };
 
 function endGame () {
-  $('.dad-cell input.with-value').each(function () {
-    $(this).toggleClass("finished");
+  $('.dad-cell input').each(function () {
+    $(this).addClass('finished');
   });
   
   var timeEnd = (new Date().getTime()) - timeNow.getTime();
@@ -186,14 +188,16 @@ function animateCellsInput ($cellsInput) {
   var delay = 100;
   $cellsInput.each(function(index, el) {
     var $input = $(this);
-    var $dad_cell = $input.parent('.dad-cell');  
-
+    var $dad_cell = $input.parent('.dad-cell'); 
+    if(!$dad_cell.hasClass('animated')){
+    $dad_cell.addClass('animated');
     $dad_cell
     .delay(delay*(index+1))
-    .animate({ backgroundColor: "#FFAF00" },defaultDelay)
+    .animate({ backgroundColor: "#FFAF00" },defaultDelay)  
     .delay(delay)
     .animate({backgroundColor: "white" },defaultDelay);
-
+    $dad_cell.removeClass('animated');
+    }   
   });
 };
 
