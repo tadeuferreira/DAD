@@ -8,8 +8,9 @@
 
 var main = function(){
   'use strict';
-  var timer = 0;
-  window.timer = timer;
+
+  var timeNow = 0;
+
   atrQuadrant();
 
   $('#highlightButtons').find('button').click(function(event) {
@@ -98,6 +99,7 @@ function conflictCell($cellInput) {
 function onClickNewGame(){
   var dificulty = $('#select-mode').find(":selected").val();
   loadGrill(dificulty);
+  timeNow = new Date();
 };
 
 function onClickCheckGame() {
@@ -142,8 +144,12 @@ function endGame () {
   $('.dad-cell input.with-value').each(function () {
     $(this).toggleClass("finished");
   });
+  
+  var timeEnd = (new Date().getTime()) - timeNow.getTime();
+  var formatted = secondsTimeSpanToHMS(timeEnd/1000);
+
   $("#message").text("Game Won, congratulations!!");
-  $("#time").text("Time: " + secondsTimeSpanToHMS(window.timer/1000));
+  $("#time").text("Time: " + formatted);
   $( "#dialog" ).dialog();
 };
 
@@ -255,7 +261,7 @@ else if(line >= 6 && line < 9 && column >= 0 && column < 3){
   $(this).attr("data-quadrant","9");
 }
 });
-}
+};
 
 function loadGrill (dificulty) {
   cleanBoard();
@@ -269,12 +275,7 @@ function loadGrill (dificulty) {
      $input.val(values[i].value);
      $input.prop('disabled', true);
    };
-   loadInitialCss(); 
-   
-   setTimeout(function(){
-    window.timer++;
-  }, 1);
-
+   loadInitialCss();
  }).fail(function (errorThrown) {
    console.log(errorThrown);
  }).always(function(){
@@ -283,14 +284,12 @@ function loadGrill (dificulty) {
 };
 
 function secondsTimeSpanToHMS(s) {
-    var h = Math.floor(s/3600); //Get whole hours
-    s -= h*3600;
-    var m = Math.floor(s/60); //Get remaining minutes
-    s -= m*60;
-    return h+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s); //zero padding on minutes and seconds
-  }
-
-
+  s = Math.trunc(s);
+  var h = Math.floor(s/3600); //Get whole hours
+  s -= h*3600;
+  var m = Math.floor(s/60); //Get remaining minutes
+  s -= m*60;
+  return h+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s); //zero padding on minutes and seconds
+};
 
   $(document).ready(main);
-
