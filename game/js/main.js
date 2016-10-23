@@ -1,6 +1,6 @@
-// 2140238- Student name 1
-// 2140001- Student name 2
-// 2140002- Student name 3
+// 2140238- Luiz Tadeu
+// 2110094- Bruno Henriques
+// 2140666- Luiz Daniel
 
 // Implementation:
 
@@ -237,27 +237,8 @@ function getBoard(){
 
 function atrQuadrant(){
   $('.dad-cell input').each( function (index, value){
-    var line = $(this).attr("data-line");
-    var column = $(this).attr("data-column");
-    if(line >= 0 && line < 3 && column >= 0 && column < 3){
-      $(this).attr("data-quadrant","1");
-    }else if(line >= 0 && line < 3 && column >= 3 && column < 6){
-      $(this).attr("data-quadrant","2");   
-    }else if(line >= 0 && line < 3 && column >= 6 && column < 9){
-      $(this).attr("data-quadrant","3");  
-    }else if(line >= 3 && line < 6 && column >= 0 && column < 3){
-      $(this).attr("data-quadrant","4");
-    }else if(line >= 3 && line < 6 && column >= 3 && column < 6){
-      $(this).attr("data-quadrant","5");
-    }else if(line >= 3 && line < 6 && column >= 6 && column < 9){
-      $(this).attr("data-quadrant","6");
-    }else if(line >= 6 && line < 9 && column >= 0 && column < 3){
-      $(this).attr("data-quadrant","7");
-    }else if(line >= 6 && line < 9 && column >= 3 && column < 6){
-      $(this).attr("data-quadrant","8");
-    }else if(line >= 6 && line < 9 && column >= 6 && column < 9){
-      $(this).attr("data-quadrant","9");
-    }
+    $(this).attr("data-quadrant", 
+    parseInt($(this).attr("data-line") / 3) * 3 + parseInt($(this).attr("data-column") / 3));
   });
 };
 
